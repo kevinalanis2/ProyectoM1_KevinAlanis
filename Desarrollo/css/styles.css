@@ -82,3 +82,22 @@ header p {
     grid-template-columns: repeat(6, 1fr);
     gap: 15px;
 }
+/* TARJETAS DE COLORES */
+
+.color-card {
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.color-preview {
+    height: 180px;
+    width: 100%;
+}
+
+.color-code {
+    padding: 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
