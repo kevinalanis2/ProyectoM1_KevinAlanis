@@ -1,0 +1,84 @@
+/* ESTILOS GENERALES */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+/* ENCABEZADO */
+
+header {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #611ba3;
+    color: white;
+}
+
+header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 16px;
+    margin: 0;
+}
+/* SECCIÓN DE CONTROLES */
+
+.controles {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.configuracion {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+/* SELECTORES */
+
+.configuracion select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+/* BOTÓN GENERAR */
+
+.configuracion button {
+    padding: 12px 28px;
+    background-color: #6424a0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+        grid-column: 1 / 5;
+    justify-self: center;
+}
+
+
+.configuracion button:hover {
+    background-color: #3b0554;
+}
+/* GALERÍA DE COLORES */
+
+.galeria {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.paleta {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+}
