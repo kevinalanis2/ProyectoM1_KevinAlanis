@@ -162,27 +162,70 @@ header p {
    9. ADAPTACIÓN A PANTALLAS PEQUEÑAS
 ========================================== */
 
+
+/* ==========================================
+   9. ADAPTACIÓN A PANTALLAS PEQUEÑAS
+========================================== */
+
 @media (max-width: 768px) {
 
+    /* Caja de controles */
     .controles {
-        margin: 20px 15px;
+        margin: 20px 12px;
+        padding: 20px 14px;
     }
 
-    .paleta {
-        gap: 8px;
+    /* Selectores organizados en dos columnas */
+    .configuracion {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 10px;
     }
 
-    .color-card {
-        max-width: 130px;
+    .configuracion label {
+        text-align: left;
+        font-size: 13px;
     }
 
-    .color-preview {
-        height: 140px;
+    .configuracion select {
+        width: 100%;
+        min-width: 0;
+        padding: 8px 5px;
+        font-size: 13px;
     }
 
-    .color-code {
-        font-size: 11px;
-        padding: 10px 3px;
+    /* Botón ocupa todo el ancho */
+    .configuracion button {
+        grid-column: 1 / -1;
+        width: 100%;
+        padding: 11px;
+        font-size: 14px;
     }
 
+
+   
+    /* Galería: 3 columnas */
+.paleta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
 }
+
+    /* Tarjetas más compactas */
+.color-card {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+}
+
+.color-preview {
+    height: 80px;
+}
+
+/* Códigos */
+.color-code {
+    font-size: 10px;
+    padding: 8px 3px;
+    overflow-wrap: anywhere;
+    text-align: center;
+}
+
