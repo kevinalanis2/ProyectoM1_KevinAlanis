@@ -7,6 +7,7 @@ const paleta = document.getElementById("paleta");
 const botonGenerar = document.getElementById("generar-paleta");
 const selectorCantidad = document.getElementById("cantidad-colores");
 const selectorFormato = document.getElementById("formato-color");
+const mensajeFeedback = document.getElementById("mensaje-feedback");
 
 
 // ==========================================
@@ -177,7 +178,11 @@ botonGenerar.addEventListener("click", function() {
 
     // Mostrar la paleta en el formato seleccionado.
     mostrarPaleta(coloresActuales, selectorFormato.value);
+    
+    // Mostrar mensaje de confirmación.
+    mensajeFeedback.textContent = "¡Nueva paleta generada!";
 });
+
 
 
 // 5.2 Evento del selector de formatos.
