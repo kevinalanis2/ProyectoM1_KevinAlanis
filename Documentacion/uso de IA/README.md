@@ -1,321 +1,172 @@
-# Uso de inteligencia artificial
+# Documentación del uso de Inteligencia Artificial
 
 ## Introducción
 
-Durante el desarrollo de **Colorfly Generator** utilicé ChatGPT como herramienta de apoyo para resolver errores, implementar funcionalidades y mejorar la experiencia de usuario.
+Durante el desarrollo de **Colorfly Generator** se utilizó inteligencia artificial como herramienta de apoyo para resolver errores, mejorar funcionalidades y consultar alternativas de implementación.
 
-La IA funcionó como asistente de aprendizaje y desarrollo. Las propuestas se revisaron, probaron y adaptaron antes de incorporarlas al proyecto.
+Los prompts se estructuraron siguiendo los conceptos aprendidos en el módulo de prompting de Henry: contexto, objetivo, instrucciones claras, restricciones técnicas y formato esperado.
 
-Los prompts se organizaron siguiendo las pautas del módulo **“Aprendiendo a conversar con la IA”** de Henry, incorporando contexto, objetivo, instrucciones, restricciones y formato de respuesta.
+Las respuestas obtenidas fueron revisadas, probadas y adaptadas al proyecto antes de incorporarlas. La IA funcionó como asistente, mientras que las decisiones finales y la validación del código fueron realizadas durante el desarrollo.
 
----
-
-## 1. Corrección de errores en JavaScript
+## Caso 1: Corrección de un error en JavaScript
 
 ### Situación
 
-Durante la implementación de la generación de paletas, las tarjetas se mostraban correctamente, pero siempre aparecían seis, independientemente de la cantidad seleccionada. En la consola también aparecía el error `Uncaught ReferenceError: cantidad is not defined`.
+Durante las pruebas de la aplicación apareció el error `ReferenceError: cantidad is not defined`. Esto impedía que la generación de la paleta funcionara correctamente.
 
-### Prompt
+### Prompt utilizado
 
-```text
-CONTEXTO:
-Estoy desarrollando Colorfly Generator para un proyecto de Henry. Utilizo HTML, CSS y JavaScript puro. Mi nivel de JavaScript es principiante.
+**Contexto:** Estoy desarrollando Colorfly Generator, una aplicación web que genera paletas de colores aleatorias mediante JavaScript. La aplicación utiliza el DOM y un array para almacenar los colores.
 
-OBJETIVO:
-Corregir el error que impide generar la cantidad de tarjetas seleccionada.
+**Objetivo:** Identificar y corregir el error `ReferenceError: cantidad is not defined`.
 
-INSTRUCCIONES:
-1. Analiza el código JavaScript que te proporcionaré.
-2. Identifica por qué la variable `cantidad` no está definida.
-3. Corrige el problema para que se generen 6, 8 o 9 tarjetas según el selector.
-4. Explícame qué causaba el error.
+**Instrucciones:**
+- Analizá el problema y explicá por qué ocurre.
+- Indicá cómo obtener correctamente la cantidad seleccionada por el usuario.
+- Proponé una solución compatible con la estructura actual del proyecto.
+- Explicá los cambios de manera sencilla.
 
-RESTRICCIONES:
-- No utilices frameworks ni librerías externas.
-- Conserva la estructura existente siempre que sea posible.
-- Evita agregar código innecesario.
+**Restricciones técnicas:**
+- Utilizar JavaScript puro.
+- Mantener el uso de `addEventListener` y manipulación del DOM.
+- No incorporar librerías externas.
 
-FORMATO DE RESPUESTA:
-Primero explica el error en palabras simples y después muestra la corrección indicando dónde aplicarla.
-```
+**Formato esperado:** Explicación del error y fragmento de código corregido.
 
-### Respuesta de la IA
+### Resultado obtenido
 
-El error `cantidad is not defined` significa que JavaScript está intentando utilizar una variable llamada `cantidad` que no existe en el ámbito donde se está ejecutando ese código.
+La IA identificó que se estaba utilizando una variable `cantidad` que no había sido declarada. La solución consistió en obtener el valor del selector de cantidad y utilizarlo correctamente al generar los colores.
 
-Para solucionarlo, hay que obtener el valor del selector y guardarlo en una variable dentro de la función que genera la paleta. Como el valor del `<select>` llega como texto, conviene convertirlo a número con `Number()`.
+### Aplicación y validación
 
-La lógica de generación puede organizarse así:
-
-```javascript
-botonGenerar.addEventListener("click", () => {
-    const cantidad = Number(selectorCantidad.value);
-
-    coloresActuales = [];
-
-    for (let i = 0; i < cantidad; i++) {
-        coloresActuales.push(generarColor());
-    }
-
-    mostrarPaleta(coloresActuales, selectorFormato.value);
-});
-```
-
-**Explicación:**
-
-- `selectorCantidad.value` obtiene la opción elegida por el usuario.
-- `Number()` convierte ese valor en un número.
-- `coloresActuales = []` prepara un arreglo nuevo para la nueva paleta.
-- El bucle `for` genera exactamente la cantidad de colores seleccionada.
-- `mostrarPaleta()` recibe el arreglo de colores y el formato seleccionado para actualizar las tarjetas.
-
-Es importante que la variable `cantidad` se declare en el mismo bloque donde se utiliza. Así evitamos errores de alcance de variables.
-
-### Aplicación y validación en Colorfly
-
-Se corrigió la lectura de la cantidad seleccionada y la generación de tarjetas. Después comprobé las tres opciones disponibles: 6, 8 y 9 colores.
+Se revisó el código, se corrigió la referencia a la cantidad seleccionada y se comprobó que el botón pudiera generar la paleta sin producir ese error.
 
 ---
 
-## 2. Actualización automática de la cantidad de colores
+## Caso 2: Actualización dinámica de la cantidad de colores
 
 ### Situación
 
-Al probar la aplicación, observé que cambiar la cantidad en el selector no modificaba visualmente la galería hasta volver a presionar el botón para generar. Quería que la interfaz respondiera inmediatamente y conservara los colores existentes.
+Inicialmente, la cantidad de tarjetas de colores solo cambiaba al presionar nuevamente el botón «Generar paleta». Se buscó mejorar la experiencia para que la paleta se actualizara automáticamente al modificar el selector de cantidad, conservando los colores existentes.
 
-### Prompt
+### Prompt utilizado
 
-```text
-CONTEXTO:
-Estoy desarrollando Colorfly Generator con JavaScript puro. La aplicación permite generar paletas de 6, 8 o 9 colores.
+**Contexto:** Colorfly Generator permite seleccionar 6, 8 o 9 colores. Los colores actuales se almacenan en un array llamado `coloresActuales` y se muestran dinámicamente en el DOM.
 
-OBJETIVO:
-Actualizar automáticamente la cantidad de tarjetas cuando el usuario modifica el selector, conservando los colores que ya existen.
+**Objetivo:** Actualizar la cantidad de tarjetas automáticamente cuando el usuario modifica el selector, sin generar una paleta completamente nueva.
 
-INSTRUCCIONES:
-1. Detecta el evento de cambio del selector de cantidad.
-2. Si aumenta la cantidad, agrega únicamente las tarjetas faltantes.
-3. Si disminuye, elimina las tarjetas sobrantes.
-4. Conserva los colores existentes.
-5. Explica cómo funciona la solución.
+**Instrucciones:**
+- Si aumenta la cantidad, agregar los colores faltantes.
+- Si disminuye, eliminar los colores sobrantes.
+- Conservar los colores que ya existen.
+- Actualizar la visualización inmediatamente.
+- Explicar cómo implementar el evento correspondiente.
 
-RESTRICCIONES:
-- No utilices frameworks ni librerías externas.
-- No generes una paleta completamente nueva al cambiar la cantidad.
-- Mantén el botón Generar para crear una paleta nueva cuando el usuario lo solicite.
+**Restricciones técnicas:**
+- Utilizar JavaScript puro.
+- Mantener el array `coloresActuales`.
+- Reutilizar la función `mostrarPaleta(coloresActuales, selectorFormato.value)`.
+- No modificar innecesariamente el resto de la aplicación.
 
-FORMATO DE RESPUESTA:
-Explica brevemente la lógica y proporciona el código JavaScript necesario, indicando dónde incorporarlo.
-```
+**Formato esperado:** Explicación y código JavaScript propuesto.
 
-### Respuesta de la IA
+### Resultado obtenido
 
-Para conseguir ese comportamiento, necesitamos conservar los colores generados en un arreglo que pueda utilizarse desde distintos eventos. En Colorfly ese arreglo es `coloresActuales`.
+La IA propuso escuchar el evento `change` del selector de cantidad y modificar el array según el nuevo valor seleccionado. De esta manera, se agregan o eliminan elementos sin reemplazar los colores que ya estaban generados.
 
-El selector de cantidad debe escuchar el evento `change`. Cuando cambia su valor, comparamos la cantidad elegida con la cantidad de elementos que ya tiene el arreglo.
+### Aplicación y validación
 
-La lógica aplicada es la siguiente:
-
-```javascript
-selectorCantidad.addEventListener("change", () => {
-    if (coloresActuales.length === 0) {
-        return;
-    }
-
-    const cantidad = Number(selectorCantidad.value);
-
-    while (coloresActuales.length < cantidad) {
-        coloresActuales.push(generarColor());
-    }
-
-    coloresActuales.length = cantidad;
-
-    mostrarPaleta(coloresActuales, selectorFormato.value);
-});
-```
-
-**Explicación:**
-
-- `change` detecta cuándo el usuario selecciona otra cantidad.
-- Si todavía no existe una paleta generada, no hay colores que actualizar.
-- El bucle `while` agrega colores solamente cuando hacen falta.
-- Al asignar un nuevo valor a `coloresActuales.length`, se eliminan los elementos sobrantes cuando la cantidad seleccionada disminuye.
-- Finalmente, `mostrarPaleta()` vuelve a dibujar las tarjetas con el contenido actualizado y el formato seleccionado.
-
-Esta solución conserva los colores que ya estaban en el arreglo. Por eso, cambiar de 6 a 9 agrega tres colores, y volver de 9 a 6 elimina los últimos tres, sin reemplazar toda la paleta.
-
-### Aplicación y validación en Colorfly
-
-Se incorporó el evento `change` al selector de cantidad. La galería pasó a actualizarse automáticamente y a conservar los colores existentes.
-
-**Prueba realizada:** seleccioné 6, luego 9 y nuevamente 6 colores. En los tres casos la cantidad de tarjetas se actualizó sin presionar otra vez el botón Generar.
+Se incorporó la lógica de actualización dinámica y se realizaron pruebas seleccionando las distintas cantidades disponibles. Se verificó que las tarjetas se agregaran o quitaran inmediatamente y que los colores existentes se conservaran.
 
 ---
 
-## 3. Conversión de formatos de color
+## Caso 3: Conversión de colores entre formatos
 
 ### Situación
 
-Quería que el usuario pudiera visualizar una misma paleta en diferentes formatos: HEX, HSL y RGBA. El cambio de formato no debía generar colores nuevos, sino modificar únicamente los códigos mostrados.
+La aplicación necesitaba mostrar los colores en distintos formatos. Se buscó implementar conversiones entre HEX, HSL y RGBA sin generar nuevos colores cada vez que el usuario cambiara el formato.
 
-### Prompt
+### Prompt utilizado
 
-```text
-CONTEXTO:
-Estoy desarrollando Colorfly Generator en JavaScript puro. La aplicación genera paletas de colores y permite seleccionar diferentes formatos de visualización.
+**Contexto:** Colorfly Generator almacena los colores en un array llamado `coloresActuales`, utilizando valores RGB como representación interna.
 
-OBJETIVO:
-Implementar la conversión de colores entre HEX, HSL y RGBA sin modificar los colores originales de la paleta.
+**Objetivo:** Implementar funciones que permitan convertir cada color a HEX, HSL y RGBA.
 
-INSTRUCCIONES:
-1. Utiliza una representación interna de los colores que permita convertirlos a los tres formatos.
-2. Crea funciones independientes para cada conversión.
-3. Actualiza los códigos mostrados cuando cambie el selector de formato.
-4. Conserva los mismos colores al cambiar de formato.
+**Instrucciones:**
+- Crear funciones independientes para cada conversión.
+- Utilizar los valores RGB almacenados.
+- Crear una función que determine qué formato mostrar según la selección del usuario.
+- Permitir cambiar el formato sin modificar los colores originales.
+- Explicar brevemente el funcionamiento de cada conversión.
 
-RESTRICCIONES:
-- No utilices librerías externas.
-- No generes colores nuevos al cambiar el formato.
-- Mantén el código organizado y fácil de comprender.
+**Restricciones técnicas:**
+- Utilizar JavaScript puro.
+- Mantener los valores internos en RGB.
+- Utilizar los identificadores de formato `"HEX"`, `"HSL"` y `"RGBA"`.
+- Reutilizar la función `mostrarPaleta(coloresActuales, selectorFormato.value)`.
 
-FORMATO DE RESPUESTA:
-Explica la lógica de conversión y muestra el código necesario, separado en funciones para facilitar su comprensión.
-```
+**Formato esperado:** Funciones JavaScript separadas y explicación de su integración.
 
-### Respuesta de la IA
+### Resultado obtenido
 
-La solución consiste en separar el color de su representación visual. En Colorfly utilizamos RGB como formato interno: cada color se guarda como un objeto con sus tres componentes, rojo, verde y azul.
+La IA propuso separar las conversiones en tres funciones:
 
-Por ejemplo:
+- `convertirRGBaHEX()`
+- `convertirRGBaHSL()`
+- `convertirRGBaRGBA()`
 
-```javascript
-const color = {
-    rojo: 255,
-    verde: 0,
-    azul: 128
-};
-```
+También propuso una función `obtenerCodigoColor()` para seleccionar la conversión correspondiente según el formato elegido.
 
-A partir de ese mismo objeto podemos calcular los tres formatos. Así evitamos generar un color diferente cada vez que cambia el selector.
+### Aplicación y validación
 
-Se utilizan funciones independientes:
-
-- `convertirRGBaHEX(color)`: convierte los canales RGB a hexadecimal. Para cada canal se utiliza `toString(16)` y `padStart(2, "0")` para asegurar que tenga dos caracteres.
-- `convertirRGBaHSL(color)`: normaliza los canales dividiéndolos por 255 y calcula tono, saturación y luminosidad.
-- `convertirRGBaRGBA(color)`: conserva los tres canales y agrega el valor de opacidad. En este proyecto se utiliza `1`, que representa opacidad completa.
-
-La selección de la conversión se centraliza en `obtenerCodigoColor()` mediante una estructura `switch`:
-
-```javascript
-function obtenerCodigoColor(color, formato) {
-    switch (formato) {
-        case "HEX":
-            return convertirRGBaHEX(color);
-
-        case "HSL":
-            return convertirRGBaHSL(color);
-
-        case "RGBA":
-            return convertirRGBaRGBA(color);
-
-        default:
-            return convertirRGBaHEX(color);
-    }
-}
-```
-
-Cuando cambia el selector de formato, se vuelve a mostrar la paleta utilizando los colores que ya están almacenados:
-
-```javascript
-selectorFormato.addEventListener("change", () => {
-    mostrarPaleta(coloresActuales, selectorFormato.value);
-});
-```
-
-La función que muestra las tarjetas consulta el formato seleccionado y obtiene el código correspondiente para cada color. De esta manera, cambia el texto que se ve en las tarjetas, pero no los valores RGB guardados.
-
-### Aplicación y validación en Colorfly
-
-Se implementó RGB como representación interna y se organizaron las conversiones en funciones independientes. La función `obtenerCodigoColor()` decide qué formato mostrar, mientras que `mostrarPaleta()` actualiza las tarjetas.
-
-**Prueba realizada:** cambié entre HEX, HSL y RGBA y comprobé que los códigos se modificaran sin cambiar las muestras de color de la paleta.
+Se incorporaron las funciones y se comprobó que los colores conservaran sus valores originales al cambiar entre HEX, HSL y RGBA. También se verificó que cada tarjeta mostrara el código correspondiente al formato seleccionado.
 
 ---
 
-## 4. Mejora del diseño responsive
+## Caso 4: Adaptación responsive de la aplicación
 
 ### Situación
 
-Al probar Colorfly en dispositivos móviles, observé que los selectores ocupaban demasiado espacio y las tarjetas de colores necesitaban una distribución más cómoda. Quería mejorar la presentación para que la galería fuera fácil de utilizar en pantallas pequeñas.
+Se buscó mejorar la visualización de Colorfly Generator en dispositivos móviles, ya que la distribución de las tarjetas estaba pensada principalmente para pantallas de escritorio.
 
-### Prompt
+### Prompt utilizado
 
-```text
-CONTEXTO:
-Estoy desarrollando Colorfly Generator con HTML y CSS. La interfaz funciona en escritorio, pero necesito mejorar su presentación en dispositivos móviles.
+**Contexto:** Colorfly Generator es una aplicación web desarrollada con HTML, CSS y JavaScript. La galería de colores utiliza CSS Grid y cada tarjeta tiene una altura definida para escritorio.
 
-OBJETIVO:
-Optimizar la distribución de los controles y las tarjetas de colores para pantallas pequeñas.
+**Objetivo:** Adaptar la interfaz para que funcione correctamente en pantallas móviles sin perjudicar la visualización en desktop.
 
-INSTRUCCIONES:
-1. Ajusta los selectores para que se adapten al ancho disponible.
-2. Organiza la galería en tres columnas.
-3. Reduce la altura de las tarjetas de 180px a aproximadamente 80px.
-4. Mantén los códigos de color legibles.
-5. Utiliza una media query para aplicar los cambios solamente en pantallas pequeñas.
+**Instrucciones:**
+- Utilizar media queries para modificar los estilos según el ancho de pantalla.
+- Adaptar la distribución de la galería.
+- Reducir la altura de las tarjetas en dispositivos móviles.
+- Mantener una separación adecuada entre los elementos.
+- Explicar los cambios realizados.
 
-RESTRICCIONES:
-- No utilices frameworks CSS.
-- Conserva el diseño de escritorio.
-- Evita que los elementos sobresalgan del contenedor.
+**Restricciones técnicas:**
+- Utilizar CSS externo.
+- Mantener CSS Grid y Flexbox cuando corresponda.
+- No utilizar estilos inline.
+- Trabajar con un breakpoint de 768px.
+- Considerar una altura de 80px para las tarjetas en móvil, frente a los 180px de escritorio.
 
-FORMATO DE RESPUESTA:
-Muestra los cambios CSS necesarios y explica brevemente qué modifica cada regla.
-```
+**Formato esperado:** Fragmento CSS responsive y explicación de su funcionamiento.
 
-### Respuesta de la IA
+### Resultado obtenido
 
-Para adaptar la interfaz sin modificar su apariencia en escritorio, podemos utilizar una media query. Esta regla permite aplicar estilos específicos cuando el ancho de la pantalla es igual o inferior a un determinado valor.
+La IA propuso utilizar una media query para modificar la distribución y las dimensiones de los elementos en pantallas de menor tamaño.
 
-En Colorfly se utiliza el punto de corte de 768 píxeles para reorganizar la presentación en pantallas pequeñas.
+### Aplicación y validación
 
-La galería utiliza el selector `#paleta` y se organiza mediante una cuadrícula:
+Se adaptaron los estilos utilizando un breakpoint de 768px. Las tarjetas pasaron de 180px de altura en escritorio a 80px en dispositivos móviles, y se mantuvo una separación de 10px entre ellas.
 
-```css
-@media (max-width: 768px) {
-    #paleta {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-    }
-}
-```
-
-**Explicación:**
-
-- `@media (max-width: 768px)` aplica las reglas en pantallas de hasta 768 píxeles.
-- `#paleta` identifica el contenedor de la galería.
-- `display: grid` organiza las tarjetas mediante CSS Grid.
-- `repeat(3, minmax(0, 1fr))` crea tres columnas que se distribuyen el espacio disponible.
-- `gap: 10px` establece la separación entre las tarjetas.
-
-Además, dentro de esa misma media query se ajustan los controles para que aprovechen el ancho disponible y se reduce la altura de las tarjetas de 180px a 80px, manteniendo los códigos legibles.
-
-### Aplicación y validación en Colorfly
-
-Se ajustaron los estilos responsive utilizando CSS Grid, Flexbox y una media query. En pantallas pequeñas, los controles se reorganizan y la galería utiliza tres columnas. También se ajustaron las dimensiones de las muestras y los códigos para mejorar su lectura.
-
-**Prueba realizada:** utilicé la vista de dispositivo móvil de las herramientas de desarrollo del navegador y comprobé que la interfaz se adaptara al ancho de pantalla.
+Se realizaron pruebas en diferentes tamaños de pantalla para comprobar que la interfaz se adaptara correctamente.
 
 ---
 
-## Reflexión final
+## Reflexión final sobre el uso de IA
 
-La utilización de inteligencia artificial fue útil durante distintas etapas del desarrollo de Colorfly Generator. Permitió identificar errores, comprender conceptos de JavaScript, implementar nuevas funcionalidades y mejorar la presentación de la aplicación.
+La inteligencia artificial fue una herramienta de apoyo durante distintas etapas del desarrollo de Colorfly Generator.
 
-La aplicación de una estructura de prompting —contexto, objetivo, instrucciones, restricciones y formato de respuesta— ayudó a formular solicitudes más claras y obtener respuestas mejor adaptadas a las necesidades del proyecto.
+Permitió comprender errores, explorar soluciones y mejorar funcionalidades, pero sus respuestas no se incorporaron automáticamente. Cada propuesta fue revisada, adaptada y probada para comprobar que funcionara con la estructura real del proyecto.
 
-También aprendí que la primera respuesta de la IA no siempre es definitiva. Fue necesario probar las soluciones, detectar problemas, realizar nuevas consultas y ajustar el código hasta conseguir el resultado esperado.
-
-La IA no reemplazó mi participación en el desarrollo: funcionó como una herramienta de apoyo para aprender, resolver dificultades y mejorar progresivamente el proyecto. La decisión de incorporar cada cambio y comprobar su funcionamiento quedó bajo mi responsabilidad.
+Esta experiencia permitió aplicar buenas prácticas de prompting, aprender a formular instrucciones más claras y comprender la importancia de validar las respuestas de la IA antes de utilizarlas en un proyecto.
