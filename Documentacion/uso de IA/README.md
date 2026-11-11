@@ -6,7 +6,7 @@ Durante el desarrollo de **Colorfly Generator** utilicé ChatGPT como herramient
 
 La IA funcionó como asistente de aprendizaje y desarrollo. Las propuestas se revisaron, probaron y adaptaron antes de incorporarlas al proyecto.
 
-En cada caso se presenta el prompt estructurado y una respuesta técnica que explica la solución aplicada en Colorfly.
+Los prompts se organizaron siguiendo las pautas del módulo **“Aprendiendo a conversar con la IA”** de Henry, incorporando contexto, objetivo, instrucciones, restricciones y formato de respuesta.
 
 ---
 
@@ -58,7 +58,7 @@ botonGenerar.addEventListener("click", () => {
         coloresActuales.push(generarColor());
     }
 
-    mostrarPaleta(coloresActuales);
+    mostrarPaleta(coloresActuales, selectorFormato.value);
 });
 ```
 
@@ -68,7 +68,7 @@ botonGenerar.addEventListener("click", () => {
 - `Number()` convierte ese valor en un número.
 - `coloresActuales = []` prepara un arreglo nuevo para la nueva paleta.
 - El bucle `for` genera exactamente la cantidad de colores seleccionada.
-- `mostrarPaleta()` actualiza las tarjetas en el HTML.
+- `mostrarPaleta()` recibe el arreglo de colores y el formato seleccionado para actualizar las tarjetas.
 
 Es importante que la variable `cantidad` se declare en el mismo bloque donde se utiliza. Así evitamos errores de alcance de variables.
 
@@ -115,7 +115,7 @@ Para conseguir ese comportamiento, necesitamos conservar los colores generados e
 
 El selector de cantidad debe escuchar el evento `change`. Cuando cambia su valor, comparamos la cantidad elegida con la cantidad de elementos que ya tiene el arreglo.
 
-La lógica es la siguiente:
+La lógica aplicada es la siguiente:
 
 ```javascript
 selectorCantidad.addEventListener("change", () => {
@@ -131,7 +131,7 @@ selectorCantidad.addEventListener("change", () => {
 
     coloresActuales.length = cantidad;
 
-    mostrarPaleta(coloresActuales);
+    mostrarPaleta(coloresActuales, selectorFormato.value);
 });
 ```
 
@@ -141,7 +141,7 @@ selectorCantidad.addEventListener("change", () => {
 - Si todavía no existe una paleta generada, no hay colores que actualizar.
 - El bucle `while` agrega colores solamente cuando hacen falta.
 - Al asignar un nuevo valor a `coloresActuales.length`, se eliminan los elementos sobrantes cuando la cantidad seleccionada disminuye.
-- Finalmente, `mostrarPaleta()` vuelve a dibujar las tarjetas con el contenido actualizado.
+- Finalmente, `mostrarPaleta()` vuelve a dibujar las tarjetas con el contenido actualizado y el formato seleccionado.
 
 Esta solución conserva los colores que ya estaban en el arreglo. Por eso, cambiar de 6 a 9 agrega tres colores, y volver de 9 a 6 elimina los últimos tres, sin reemplazar toda la paleta.
 
@@ -185,7 +185,7 @@ Explica la lógica de conversión y muestra el código necesario, separado en fu
 
 ### Respuesta de la IA
 
-La solución consiste en separar el color de su representación visual. En Colorfly utilizamos RGB como formato interno: cada color se guarda como un objeto con tres propiedades, `rojo`, `verde` y `azul`.
+La solución consiste en separar el color de su representación visual. En Colorfly utilizamos RGB como formato interno: cada color se guarda como un objeto con sus tres componentes, rojo, verde y azul.
 
 Por ejemplo:
 
@@ -210,13 +210,13 @@ La selección de la conversión se centraliza en `obtenerCodigoColor()` mediante
 ```javascript
 function obtenerCodigoColor(color, formato) {
     switch (formato) {
-        case "hex":
+        case "HEX":
             return convertirRGBaHEX(color);
 
-        case "hsl":
+        case "HSL":
             return convertirRGBaHSL(color);
 
-        case "rgba":
+        case "RGBA":
             return convertirRGBaRGBA(color);
 
         default:
@@ -229,7 +229,7 @@ Cuando cambia el selector de formato, se vuelve a mostrar la paleta utilizando l
 
 ```javascript
 selectorFormato.addEventListener("change", () => {
-    mostrarPaleta(coloresActuales);
+    mostrarPaleta(coloresActuales, selectorFormato.value);
 });
 ```
 
@@ -261,7 +261,7 @@ Optimizar la distribución de los controles y las tarjetas de colores para panta
 INSTRUCCIONES:
 1. Ajusta los selectores para que se adapten al ancho disponible.
 2. Organiza la galería en tres columnas.
-3. Reduce la altura de las tarjetas aproximadamente un 30 %.
+3. Reduce la altura de las tarjetas de 180px a aproximadamente 80px.
 4. Mantén los códigos de color legibles.
 5. Utiliza una media query para aplicar los cambios solamente en pantallas pequeñas.
 
@@ -280,14 +280,14 @@ Para adaptar la interfaz sin modificar su apariencia en escritorio, podemos util
 
 En Colorfly se utiliza el punto de corte de 768 píxeles para reorganizar la presentación en pantallas pequeñas.
 
-La galería puede pasar a una cuadrícula de tres columnas:
+La galería utiliza el selector `#paleta` y se organiza mediante una cuadrícula:
 
 ```css
 @media (max-width: 768px) {
-    .paleta {
+    #paleta {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
+        gap: 10px;
     }
 }
 ```
@@ -295,17 +295,16 @@ La galería puede pasar a una cuadrícula de tres columnas:
 **Explicación:**
 
 - `@media (max-width: 768px)` aplica las reglas en pantallas de hasta 768 píxeles.
+- `#paleta` identifica el contenedor de la galería.
 - `display: grid` organiza las tarjetas mediante CSS Grid.
 - `repeat(3, minmax(0, 1fr))` crea tres columnas que se distribuyen el espacio disponible.
-- `gap` establece la separación entre las tarjetas.
+- `gap: 10px` establece la separación entre las tarjetas.
 
-Además, dentro de esa misma media query se ajustan los controles para que aprovechen el ancho disponible, se reducen las dimensiones de las muestras de color y se conserva un tamaño legible para los códigos.
-
-La idea es que los cambios móviles estén separados de los estilos generales. Así, la presentación de escritorio se mantiene y solo se reorganiza cuando la pantalla es más pequeña.
+Además, dentro de esa misma media query se ajustan los controles para que aprovechen el ancho disponible y se reduce la altura de las tarjetas de 180px a 80px, manteniendo los códigos legibles.
 
 ### Aplicación y validación en Colorfly
 
-Se ajustaron los estilos responsive utilizando CSS Grid, Flexbox y una media query. En pantallas pequeñas, los controles se reorganizan y la galería utiliza tres columnas. También se ajustaron las muestras y los códigos para mejorar su lectura.
+Se ajustaron los estilos responsive utilizando CSS Grid, Flexbox y una media query. En pantallas pequeñas, los controles se reorganizan y la galería utiliza tres columnas. También se ajustaron las dimensiones de las muestras y los códigos para mejorar su lectura.
 
 **Prueba realizada:** utilicé la vista de dispositivo móvil de las herramientas de desarrollo del navegador y comprobé que la interfaz se adaptara al ancho de pantalla.
 
