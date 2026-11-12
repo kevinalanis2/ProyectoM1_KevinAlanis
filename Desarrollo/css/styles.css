@@ -1,3 +1,4 @@
+
 /* ==========================================
    1. ESTILOS GENERALES
 ========================================== */
@@ -149,16 +150,58 @@ header p {
     width: 100%;
 }
 
+
+/* ==========================================
+   9. CÓDIGO DE COLOR Y COPIADO
+========================================== */
+
 .color-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 48px;
     padding: 15px 5px;
+    border: none;
+    background-color: white;
+    color: #222;
+    font-family: Arial, sans-serif;
     font-size: 14px;
     font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.codigo-texto {
     overflow-wrap: anywhere;
+}
+
+.icono-copiar {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: #6424a0;
+    transition: transform 0.2s ease;
+}
+
+.color-code:hover {
+    background-color: #f3eafa;
+    color: #6424a0;
+}
+
+.color-code:hover .icono-copiar {
+    transform: scale(1.1);
+}
+
+.color-code:focus-visible {
+    outline: 3px solid #6424a0;
+    outline-offset: -3px;
 }
 
 
 /* ==========================================
-   9. CASILLA PARA CONSERVAR COLORES
+   10. CASILLA PARA CONSERVAR COLORES
 ========================================== */
 
 .conservar-color {
@@ -167,16 +210,46 @@ header p {
     right: 8px;
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 7px;
-    background-color: rgba(255, 255, 255, 0.92);
+    gap: 0;
+    padding: 6px;
+    background-color: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(4px);
     border-radius: 6px;
     font-size: 11px;
     font-weight: bold;
     color: #333;
     cursor: pointer;
     z-index: 1;
+    opacity: 0.85;
+    transition: background-color 0.2s ease, opacity 0.2s ease, gap 0.2s ease;
 }
+
+/* Ocultar el texto inicialmente. */
+
+.conservar-color span {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 0.25s ease, opacity 0.2s ease;
+}
+
+/* Mostrar el texto al pasar el mouse por la tarjeta. */
+
+.color-card:hover .conservar-color,
+.color-card:focus-within .conservar-color {
+    gap: 5px;
+    background-color: rgba(255, 255, 255, 0.94);
+    opacity: 1;
+}
+
+.color-card:hover .conservar-color span,
+.color-card:focus-within .conservar-color span {
+    max-width: 70px;
+    opacity: 1;
+}
+
+/* Estilo de la casilla. */
 
 .conservar-color input {
     width: 14px;
@@ -184,6 +257,7 @@ header p {
     margin: 0;
     accent-color: #6424a0;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 .conservar-color input:focus-visible {
@@ -193,7 +267,7 @@ header p {
 
 
 /* ==========================================
-   10. ADAPTACIÓN A PANTALLAS PEQUEÑAS
+   11. ADAPTACIÓN A PANTALLAS PEQUEÑAS
 ========================================== */
 
 @media (max-width: 768px) {
@@ -204,7 +278,7 @@ header p {
         padding: 20px 14px;
     }
 
-    /* Selectores organizados en dos columnas */
+    /* Selectores en dos columnas */
     .configuracion {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 10px;
@@ -230,14 +304,14 @@ header p {
         font-size: 14px;
     }
 
-    /* Galería: 3 columnas */
+    /* Galería en tres columnas */
     .paleta {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 10px;
     }
 
-    /* Tarjetas más compactas */
+    /* Tarjetas compactas */
     .color-card {
         width: 100%;
         max-width: none;
@@ -250,19 +324,30 @@ header p {
 
     /* Códigos */
     .color-code {
+        gap: 4px;
+        min-height: 38px;
         font-size: 10px;
         padding: 8px 3px;
-        overflow-wrap: anywhere;
         text-align: center;
+    }
+
+    .icono-copiar {
+        width: 14px;
+        height: 14px;
     }
 
     /* Casilla para conservar */
     .conservar-color {
         top: 4px;
         right: 4px;
-        gap: 3px;
-        padding: 3px 4px;
-        font-size: 9px;
+        gap: 0;
+        padding: 4px;
+        opacity: 0.9;
+    }
+
+    .conservar-color span {
+        max-width: 0;
+        opacity: 0;
     }
 
     .conservar-color input {
@@ -270,3 +355,4 @@ header p {
         height: 12px;
     }
 }
+

@@ -1,3 +1,4 @@
+
 // ==========================================
 // 1. SELECCIÓN DE ELEMENTOS HTML (DOM)
 // ==========================================
@@ -13,16 +14,31 @@ const mensajeFeedback = document.getElementById("mensaje-feedback");
 // 2. ESTADO DE LA APLICACIÓN
 // ==========================================
 
-// Conserva los colores actuales en formato RGB.
-
 let coloresActuales = [];
+let temporizadorFeedback;
 
 
 // ==========================================
-// 3. FUNCIONES DE GENERACIÓN Y CONVERSIÓN
+// 3. FUNCIÓN DE MICROFEEDBACK
 // ==========================================
 
-// 3.1 Genera un color aleatorio en formato RGB.
+function mostrarFeedback(mensaje) {
+
+    clearTimeout(temporizadorFeedback);
+
+    mensajeFeedback.textContent = mensaje;
+
+    temporizadorFeedback = setTimeout(function() {
+        mensajeFeedback.textContent = "";
+    }, 4000);
+}
+
+
+// ==========================================
+// 4. FUNCIONES DE GENERACIÓN Y CONVERSIÓN
+// ==========================================
+
+// 4.1 Genera un color aleatorio en formato RGB.
 
 function generarColor() {
     const rojo = Math.floor(Math.random() * 256);
@@ -38,7 +54,7 @@ function generarColor() {
 }
 
 
-// 3.2 Convierte RGB a HEX.
+// 4.2 Convierte RGB a HEX.
 
 function convertirRGBaHEX(color) {
     const rojo = color.rojo.toString(16).padStart(2, "0");
@@ -49,7 +65,7 @@ function convertirRGBaHEX(color) {
 }
 
 
-// 3.3 Convierte RGB a HSL.
+// 4.3 Convierte RGB a HSL.
 
 function convertirRGBaHSL(color) {
     const rojo = color.rojo / 255;
@@ -91,14 +107,14 @@ function convertirRGBaHSL(color) {
 }
 
 
-// 3.4 Convierte RGB a RGBA.
+// 4.4 Convierte RGB a RGBA.
 
 function convertirRGBaRGBA(color) {
     return `rgba(${color.rojo}, ${color.verde}, ${color.azul}, 1)`;
 }
 
 
-// 3.5 Obtiene la representación según el formato seleccionado.
+// 4.5 Obtiene la representación según el formato seleccionado.
 
 function obtenerCodigoColor(color, formato) {
     switch (formato) {
@@ -118,15 +134,33 @@ function obtenerCodigoColor(color, formato) {
 
 
 // ==========================================
-// 4. FUNCIÓN PARA MOSTRAR LA PALETA
+// 5. FUNCIÓN PARA COPIAR CÓDIGOS
+// ==========================================
+
+async function copiarCodigo(codigo) {
+
+    try {
+        await navigator.clipboard.writeText(codigo);
+
+        mostrarFeedback(`¡Código ${codigo} copiado!`);
+
+    } catch (error) {
+
+        mostrarFeedback(
+            "No se pudo copiar el código. Verificá los permisos del navegador."
+        );
+    }
+}
+
+
+// ==========================================
+// 6. FUNCIÓN PARA MOSTRAR LA PALETA
 // ==========================================
 
 function mostrarPaleta(colores, formato) {
 
-    // Limpiar las tarjetas anteriores.
     paleta.innerHTML = "";
 
-    // Recorrer los colores de la paleta.
     for (const color of colores) {
 
         // Crear la tarjeta principal.
@@ -156,7 +190,6 @@ function mostrarPaleta(colores, formato) {
             "Conservar este color"
         );
 
-        // Actualizar el estado cuando se marca o desmarca.
         casillaConservar.addEventListener("change", function() {
             color.bloqueado = casillaConservar.checked;
         });
@@ -164,30 +197,91 @@ function mostrarPaleta(colores, formato) {
         conservarColor.appendChild(textoConservar);
         conservarColor.appendChild(casillaConservar);
 
-        // Ubicar la casilla sobre la vista previa.
         vistaColor.appendChild(conservarColor);
 
-        // Crear el espacio para mostrar el código.
-        const codigoColor = document.createElement("div");
+        // Crear el botón para mostrar y copiar el código.
+        const codigoColor = document.createElement("button");
+        codigoColor.type = "button";
         codigoColor.classList.add("color-code");
 
-        codigoColor.textContent = obtenerCodigoColor(color, formato);
+        const codigo = obtenerCodigoColor(color, formato);
+
+        // Crear el texto del código.
+        const textoCodigo = document.createElement("span");
+        textoCodigo.classList.add("codigo-texto");
+        textoCodigo.textContent = codigo;
+
+        // Crear el ícono SVG de Lucide: Copy.
+        const iconoCopiar = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg"
+        );
+
+        iconoCopiar.setAttribute("viewBox", "0 0 24 24");
+        iconoCopiar.setAttribute("width", "16");
+        iconoCopiar.setAttribute("height", "16");
+        iconoCopiar.setAttribute("fill", "none");
+        iconoCopiar.setAttribute("stroke", "currentColor");
+        iconoCopiar.setAttribute("stroke-width", "2");
+        iconoCopiar.setAttribute("stroke-linecap", "round");
+        iconoCopiar.setAttribute("stroke-linejoin", "round");
+        iconoCopiar.setAttribute("aria-hidden", "true");
+        iconoCopiar.classList.add("icono-copiar");
+
+        // Parte trasera del ícono.
+        const parteTrasera = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+        );
+
+        parteTrasera.setAttribute(
+            "d",
+            "M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"
+        );
+
+        // Parte delantera del ícono.
+        const parteDelantera = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect"
+        );
+
+        parteDelantera.setAttribute("x", "8");
+        parteDelantera.setAttribute("y", "8");
+        parteDelantera.setAttribute("width", "13");
+        parteDelantera.setAttribute("height", "13");
+        parteDelantera.setAttribute("rx", "2");
+
+        iconoCopiar.appendChild(parteTrasera);
+        iconoCopiar.appendChild(parteDelantera);
+
+        // Agregar el texto y el ícono al botón.
+        codigoColor.appendChild(textoCodigo);
+        codigoColor.appendChild(iconoCopiar);
+
+        codigoColor.setAttribute(
+            "aria-label",
+            `Copiar código de color ${codigo}`
+        );
+
+        // Copiar el código al hacer clic.
+        codigoColor.addEventListener("click", function() {
+            copiarCodigo(codigo);
+        });
 
         // Unir los elementos de la tarjeta.
         nuevaTarjeta.appendChild(vistaColor);
         nuevaTarjeta.appendChild(codigoColor);
 
-        // Agregar la tarjeta a la galería.
         paleta.appendChild(nuevaTarjeta);
     }
 }
 
 
 // ==========================================
-// 5. EVENTOS
+// 7. EVENTOS
 // ==========================================
 
-// 5.1 Evento del botón Generar paleta.
+// 7.1 Evento del botón Generar paleta.
 
 botonGenerar.addEventListener("click", function() {
 
@@ -201,8 +295,9 @@ botonGenerar.addEventListener("click", function() {
     if (hayBloqueadosFueraDeRango) {
         selectorCantidad.value = String(coloresActuales.length);
 
-        mensajeFeedback.textContent =
-            "Desbloqueá los colores que están fuera de la cantidad seleccionada.";
+        mostrarFeedback(
+            "Desbloqueá los colores que están fuera de la cantidad seleccionada."
+        );
 
         return;
     }
@@ -215,45 +310,37 @@ botonGenerar.addEventListener("click", function() {
         const colorActual = coloresActuales[indice];
 
         if (colorActual && colorActual.bloqueado) {
-            // Mantener el color bloqueado en su posición original.
             nuevaPaleta.push(colorActual);
 
         } else {
-            // Reemplazar solamente los colores desbloqueados.
             nuevaPaleta.push(generarColor());
         }
     }
 
-    // Actualizar la paleta actual.
     coloresActuales = nuevaPaleta;
 
-    // Mostrar la paleta en el formato seleccionado.
     mostrarPaleta(coloresActuales, selectorFormato.value);
 
-    // Mostrar mensaje de confirmación.
-    mensajeFeedback.textContent = "¡Nueva paleta generada!";
+    mostrarFeedback("¡Nueva paleta generada!");
 });
 
 
-// 5.2 Evento del selector de formatos.
+// 7.2 Evento del selector de formatos.
 
 selectorFormato.addEventListener("change", function() {
 
-    // Si todavía no hay colores, no hay nada que actualizar.
     if (coloresActuales.length === 0) {
         return;
     }
 
-    // Mostrar los mismos colores en el nuevo formato.
     mostrarPaleta(coloresActuales, selectorFormato.value);
 });
 
 
-// 5.3 Evento del selector de cantidad.
+// 7.3 Evento del selector de cantidad.
 
 selectorCantidad.addEventListener("change", function() {
 
-    // Si todavía no hay una paleta generada, no hacemos nada.
     if (coloresActuales.length === 0) {
         return;
     }
@@ -267,11 +354,11 @@ selectorCantidad.addEventListener("change", function() {
 
     if (hayBloqueadosFueraDeRango) {
 
-        // Recuperar la cantidad anterior.
         selectorCantidad.value = String(coloresActuales.length);
 
-        mensajeFeedback.textContent =
-            "Desbloqueá los colores que están fuera de la cantidad seleccionada.";
+        mostrarFeedback(
+            "Desbloqueá los colores que están fuera de la cantidad seleccionada."
+        );
 
         return;
     }
@@ -284,11 +371,9 @@ selectorCantidad.addEventListener("change", function() {
         nuevaPaleta.push(generarColor());
     }
 
-    // Actualizar la paleta.
     coloresActuales = nuevaPaleta;
 
-    // Mostrar la galería conservando el formato seleccionado.
     mostrarPaleta(coloresActuales, selectorFormato.value);
 
-    mensajeFeedback.textContent = "¡Cantidad de colores actualizada!";
+    mostrarFeedback("¡Cantidad de colores actualizada!");
 });
