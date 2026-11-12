@@ -37,7 +37,7 @@ header p {
 
 
 /* ==========================================
-   3. SECCIÓN DE CONTROLES
+   3. CAJA DE HERRAMIENTAS
 ========================================== */
 
 .controles {
@@ -50,6 +50,11 @@ header p {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.10);
 }
 
+
+/* ==========================================
+   4. CONFIGURACIÓN DE LA PALETA
+========================================== */
+
 .configuracion {
     display: grid;
     grid-template-columns: auto auto auto auto;
@@ -57,11 +62,6 @@ header p {
     align-items: center;
     gap: 15px;
 }
-
-
-/* ==========================================
-   4. SELECTORES
-========================================== */
 
 .configuracion select {
     padding: 10px;
@@ -76,7 +76,9 @@ header p {
    5. BOTÓN GENERAR
 ========================================== */
 
-.configuracion button {
+#generar-paleta {
+    display: block;
+    margin: 25px auto 0;
     padding: 12px 28px;
     background-color: #6424a0;
     color: white;
@@ -84,11 +86,10 @@ header p {
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
-    grid-column: 1 / 5;
-    justify-self: center;
+    transition: background-color 0.2s ease;
 }
 
-.configuracion button:hover {
+#generar-paleta:hover {
     background-color: #3b0554;
 }
 
@@ -131,7 +132,60 @@ header p {
 
 
 /* ==========================================
-   8. TARJETAS DE COLORES
+   8. GUARDAR PALETA
+========================================== */
+
+.guardar-configuracion {
+    max-width: 650px;
+    margin: 0 auto 25px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px 12px;
+    align-items: center;
+    text-align: left;
+}
+
+.guardar-configuracion label {
+    grid-column: 1 / -1;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.guardar-configuracion input {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.guardar-configuracion input:focus {
+    outline: 2px solid #6424a0;
+    outline-offset: 1px;
+}
+
+#guardar-paleta {
+    padding: 12px 22px;
+    background-color: #6424a0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#guardar-paleta:hover {
+    background-color: #3b0554;
+}
+
+
+/* ==========================================
+   9. TARJETAS DE COLORES
 ========================================== */
 
 .color-card {
@@ -152,7 +206,7 @@ header p {
 
 
 /* ==========================================
-   9. CÓDIGO DE COLOR Y COPIADO
+   10. CÓDIGO DE COLOR Y COPIADO
 ========================================== */
 
 .color-code {
@@ -201,7 +255,7 @@ header p {
 
 
 /* ==========================================
-   10. CASILLA PARA CONSERVAR COLORES
+   11. CASILLA PARA CONSERVAR COLORES
 ========================================== */
 
 .conservar-color {
@@ -224,8 +278,6 @@ header p {
     transition: background-color 0.2s ease, opacity 0.2s ease, gap 0.2s ease;
 }
 
-/* Ocultar el texto inicialmente. */
-
 .conservar-color span {
     max-width: 0;
     opacity: 0;
@@ -233,8 +285,6 @@ header p {
     white-space: nowrap;
     transition: max-width 0.25s ease, opacity 0.2s ease;
 }
-
-/* Mostrar el texto al pasar el mouse por la tarjeta. */
 
 .color-card:hover .conservar-color,
 .color-card:focus-within .conservar-color {
@@ -248,8 +298,6 @@ header p {
     max-width: 70px;
     opacity: 1;
 }
-
-/* Estilo de la casilla. */
 
 .conservar-color input {
     width: 14px;
@@ -267,18 +315,129 @@ header p {
 
 
 /* ==========================================
-   11. ADAPTACIÓN A PANTALLAS PEQUEÑAS
+   12. SECCIÓN MIS PALETAS
+========================================== */
+
+.mis-paletas {
+    max-width: 1200px;
+    margin: 30px auto 50px;
+    padding: 20px;
+}
+
+.mis-paletas h2 {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.descripcion-paletas {
+    margin: 0 0 25px;
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+}
+
+.lista-paletas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+}
+
+.mensaje-sin-paletas {
+    grid-column: 1 / -1;
+    padding: 30px 15px;
+    background-color: white;
+    border: 1px dashed #ccc;
+    border-radius: 10px;
+    color: #777;
+    text-align: center;
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   13. TARJETAS DE PALETAS GUARDADAS
+========================================== */
+
+.paleta-guardada {
+    padding: 15px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.paleta-guardada h3 {
+    margin: 0 0 6px;
+    color: #333;
+    font-size: 16px;
+    overflow-wrap: anywhere;
+}
+
+.fecha-paleta {
+    margin: 0 0 12px;
+    color: #888;
+    font-size: 12px;
+}
+
+.mini-colores {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 4px;
+    margin-bottom: 15px;
+}
+
+.mini-color {
+    height: 32px;
+    border-radius: 4px;
+}
+
+.acciones-paleta {
+    display: flex;
+    gap: 8px;
+}
+
+.acciones-paleta button {
+    flex: 1;
+    padding: 9px 6px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.boton-recuperar {
+    background-color: #6424a0;
+    color: white;
+}
+
+.boton-recuperar:hover {
+    background-color: #3b0554;
+}
+
+.boton-eliminar {
+    background-color: #fceaea;
+    color: #b42318;
+}
+
+.boton-eliminar:hover {
+    background-color: #f5d0d0;
+}
+
+
+/* ==========================================
+   14. ADAPTACIÓN A PANTALLAS PEQUEÑAS
 ========================================== */
 
 @media (max-width: 768px) {
 
-    /* Caja de controles */
+    /* Caja de herramientas */
     .controles {
         margin: 20px 12px;
         padding: 20px 14px;
     }
 
-    /* Selectores en dos columnas */
+    /* Configuración en dos columnas */
     .configuracion {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 10px;
@@ -296,9 +455,28 @@ header p {
         font-size: 13px;
     }
 
-    /* Botón ocupa todo el ancho */
-    .configuracion button {
-        grid-column: 1 / -1;
+    /* Botón generar */
+    #generar-paleta {
+        width: 100%;
+        padding: 11px;
+        font-size: 14px;
+    }
+
+    /* Guardado de paleta */
+    .guardar-configuracion {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .guardar-configuracion label {
+        font-size: 13px;
+    }
+
+    .guardar-configuracion input {
+        font-size: 13px;
+    }
+
+    #guardar-paleta {
         width: 100%;
         padding: 11px;
         font-size: 14px;
@@ -354,5 +532,16 @@ header p {
         width: 12px;
         height: 12px;
     }
+
+    /* Mis paletas */
+    .mis-paletas {
+        margin: 20px 0 35px;
+        padding: 15px;
+    }
+
+    .lista-paletas {
+        grid-template-columns: 1fr;
+    }
 }
+
 

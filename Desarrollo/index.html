@@ -17,10 +17,14 @@
 </header>
 
 <main>
+
+    <!-- CONFIGURACIÓN DE LA PALETA -->
     <section class="controles">
+
         <h2>Crea sin límites</h2>
 
         <div class="configuracion">
+
             <label for="cantidad-colores">Cantidad de colores:</label>
 
             <select id="cantidad-colores">
@@ -37,7 +41,6 @@
                 <option value="RGBA">RGBA</option>
             </select>
 
-            <button id="generar-paleta">Generar paleta</button>
         </div>
 
         <!-- MENSAJE DE MICROFEEDBACK -->
@@ -45,13 +48,53 @@
 
     </section>
 
+
+    <!-- GALERÍA DE COLORES -->
     <section class="galeria">
+
         <h2>Tu paleta de colores</h2>
+
+        <!-- GUARDAR PALETA -->
+        <div class="guardar-configuracion">
+
+            <label for="nombre-paleta">Nombre de tu paleta:</label>
+
+            <input
+                type="text"
+                id="nombre-paleta"
+                placeholder="Ej. Atardecer tropical"
+                maxlength="40"
+            >
+
+            <button id="guardar-paleta">Guardar paleta</button>
+
+        </div>
 
         <div id="paleta" class="paleta">
             <!-- Los colores se generarán dinámicamente con JavaScript -->
         </div>
+
+        <!-- BOTÓN PARA GENERAR OTRA PALETA -->
+        <button id="generar-paleta">Generar otra paleta</button>
+
     </section>
+
+
+    <!-- MIS PALETAS GUARDADAS -->
+    <section class="mis-paletas">
+
+        <h2>Mis paletas</h2>
+
+        <p class="descripcion-paletas">
+            Tus combinaciones guardadas estarán disponibles aquí.
+        </p>
+
+        <div id="lista-paletas" class="lista-paletas">
+            <!-- Las paletas guardadas se mostrarán dinámicamente -->
+        </div>
+
+    </section>
+
 </main>
 
 </body>
