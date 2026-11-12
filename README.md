@@ -16,7 +16,7 @@ Aplicación web interactiva para generar paletas de colores aleatorias, visualiz
 
 Colorfly Generator es una aplicación web estática que permite crear paletas de colores aleatorias de manera sencilla e interactiva.
 
-El usuario puede elegir la cantidad de colores que desea generar y seleccionar el formato en el que quiere visualizar sus códigos: HEX, HSL o RGBA.
+El usuario puede elegir la cantidad de colores que desea generar, seleccionar el formato en el que quiere visualizar sus códigos y conservar, copiar y guardar sus combinaciones favoritas.
 
 El proyecto fue desarrollado como parte del Proyecto Integrador 1 de Henry, aplicando conocimientos de HTML5, CSS3, JavaScript, manipulación del DOM y control de versiones con Git y GitHub.
 
@@ -30,18 +30,26 @@ El proyecto fue desarrollado como parte del Proyecto Integrador 1 de Henry, apli
 - ✅ Selección de cantidad de colores: 6, 8 o 9.
 - ✅ Visualización de códigos en formatos HEX, HSL y RGBA.
 - ✅ Actualización del formato sin generar nuevos colores.
-- ✅ Actualización automática de la cantidad de tarjetas al modificar el selector.
-- ✅ Microfeedback visual al generar una nueva paleta.
+- ✅ Actualización automática de la cantidad de tarjetas.
+- ✅ Conservación de colores seleccionados al generar nuevas paletas.
+- ✅ Copiado de códigos de color al portapapeles.
+- ✅ Guardado de paletas con nombres personalizados.
+- ✅ Recuperación de paletas guardadas.
+- ✅ Eliminación de paletas guardadas.
+- ✅ Persistencia de datos mediante LocalStorage.
+- ✅ Microfeedback visual para confirmar las acciones realizadas.
 - ✅ Diseño responsive para escritorio y dispositivos móviles.
-- ✅ Estructura HTML semántica y controles con etiquetas asociadas.
+- ✅ Estructura HTML semántica y controles accesibles mediante teclado.
 
 ---
 
 ## 🖥️ Manual de usuario
 
-### ¿Cómo generar una paleta?
+### ¿Cómo configurar y generar una paleta?
 
-Presioná el botón **"Generar paleta"** para crear una nueva combinación aleatoria de colores.
+1. Elegí la cantidad de colores: 6, 8 o 9.
+2. Seleccioná el formato de visualización: HEX, HSL o RGBA.
+3. Presioná **"Generar otra paleta"**, ubicado debajo de las tarjetas, para crear una combinación aleatoria.
 
 ### ¿Cómo cambiar la cantidad de colores?
 
@@ -55,9 +63,32 @@ En el selector **"Formato de color"**, elegí entre HEX, HSL o RGBA.
 
 Los códigos de las tarjetas se actualizan automáticamente sin generar una nueva paleta ni modificar los colores existentes.
 
-### ¿Cómo visualizar una nueva combinación?
+### ¿Cómo copiar un código de color?
 
-Presioná nuevamente **"Generar paleta"**. La aplicación creará una nueva combinación aleatoria y mostrará un mensaje de confirmación.
+Hacé clic sobre el código de cualquier tarjeta para copiarlo al portapapeles.
+
+La aplicación muestra un mensaje de confirmación cuando la operación se realiza correctamente.
+
+### ¿Cómo conservar colores?
+
+Activá la casilla **"Conservar"** de los colores que quieras mantener.
+
+Al generar una nueva paleta, esos colores permanecerán en sus posiciones originales y los demás serán reemplazados por nuevos colores aleatorios.
+
+### ¿Cómo guardar una paleta?
+
+1. Escribí un nombre en el campo **"Nombre de tu paleta"**.
+2. Presioná **"Guardar paleta"**.
+3. La combinación aparecerá en la sección **"Mis paletas"**.
+
+### ¿Cómo recuperar o eliminar una paleta?
+
+En la sección **"Mis paletas"** podés:
+
+- **Recuperar:** volver a cargar una combinación guardada, incluyendo sus colores y formato.
+- **Eliminar:** quitar una combinación de la lista de paletas guardadas.
+
+Las paletas se almacenan mediante LocalStorage y permanecen disponibles al recargar la aplicación o volver a abrirla en el mismo navegador.
 
 ---
 
@@ -68,6 +99,8 @@ Presioná nuevamente **"Generar paleta"**. La aplicación creará una nueva comb
 Los colores se almacenan en un array llamado `coloresActuales`, utilizando objetos con sus componentes RGB (rojo, verde y azul).
 
 Esta representación permite mantener los valores originales y convertirlos a distintos formatos sin perder información.
+
+Cada color también conserva su estado de bloqueo para poder mantenerlo durante la generación de nuevas paletas.
 
 ### Conversión de formatos
 
@@ -81,15 +114,29 @@ La función `obtenerCodigoColor()` determina qué conversión utilizar según el
 
 ### Manipulación dinámica del DOM
 
-La función `mostrarPaleta()` crea las tarjetas de colores dinámicamente mediante JavaScript, utilizando `document.createElement()` y agregando los elementos a la galería.
+La función `mostrarPaleta()` crea las tarjetas de colores dinámicamente mediante JavaScript, utilizando métodos como `document.createElement()` y `appendChild()`.
 
 Esto permite actualizar la visualización sin modificar directamente el HTML.
 
 ### Conservación y actualización de la paleta
 
-Se utiliza el array `coloresActuales` para conservar los colores generados.
+Se utiliza el array `coloresActuales` para administrar los colores de la paleta.
 
-Al cambiar el formato, se actualiza únicamente el código mostrado. Al modificar la cantidad, se agregan o eliminan elementos del array según corresponda, conservando los colores existentes siempre que sea posible.
+Al cambiar el formato, se actualiza únicamente el código mostrado. Al modificar la cantidad, se agregan o eliminan elementos según corresponda.
+
+Al generar una nueva combinación, los colores bloqueados mantienen sus valores y posiciones, mientras que los restantes se generan nuevamente.
+
+### Guardado de paletas
+
+Se utiliza `localStorage` para almacenar las combinaciones guardadas en el navegador.
+
+Cada paleta conserva su identificador, nombre, fecha, formato y colores. Esto permite recuperar o eliminar combinaciones sin necesidad de utilizar un servidor o una base de datos externa.
+
+### Copiado de códigos
+
+Se utiliza la API Clipboard del navegador para copiar los códigos de color al portapapeles.
+
+La acción se ejecuta mediante eventos de JavaScript y se acompaña con mensajes de feedback.
 
 ### Diseño responsive
 
@@ -99,7 +146,9 @@ En escritorio, la galería utiliza Flexbox. En dispositivos con un ancho de hast
 
 ### Accesibilidad
 
-Se incorporaron etiquetas HTML semánticas, `label` asociados a los selectores y el atributo `aria-live="polite"` en el mensaje de feedback para comunicar las actualizaciones dinámicas.
+Se incorporaron etiquetas HTML semánticas, `label` asociados a los controles y el atributo `aria-live="polite"` en los mensajes de feedback.
+
+También se contemplaron estados de foco para facilitar la navegación mediante teclado.
 
 ---
 
@@ -143,7 +192,7 @@ Cada vez que se realiza un `push` a la rama `main`, GitHub Actions prepara los a
 
 **Demo publicada:**
 
-https://kevinalanis2.github.io/ProyectoM1_KevinAlanis/
+[https://kevinalanis2.github.io/ProyectoM1_KevinAlanis/](https://kevinalanis2.github.io/ProyectoM1_KevinAlanis/)
 
 ---
 
@@ -186,7 +235,7 @@ ProyectoM1_KevinAlanis/
 
 ## 🤖 Documentación del uso de IA
 
-Durante el desarrollo se utilizaron herramientas de inteligencia artificial como apoyo para resolver errores, mejorar funcionalidades y consultar alternativas de implementación.
+Durante el desarrollo se utilizaron herramientas de inteligencia artificial como apoyo para resolver errores, comprender conceptos, mejorar funcionalidades y evaluar alternativas de implementación.
 
 Los prompts, resultados y reflexiones sobre su utilización se encuentran documentados en:
 
